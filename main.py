@@ -6,6 +6,7 @@ import tarfile
 import urllib.request
 import numpy as np
 from sklearn.impute import SimpleImputer
+import matplotlib.pyplot as plt
 
 # Carrega o arquivo .csv da pasta "data" em um DataFrame utilizando a biblioteca pandas, armazenando-o na variável "df".
 df_vinhos = pd.read_csv(Path("data/group_6_winequality.csv"))
@@ -16,14 +17,48 @@ print(df_vinhos.head())
 # Exibe informações gerais sobre o df_vinhos, incluindo: número de linhas e colunas, nome de cada coluna, quantidade de valores não nulos e tipo de dado de cada coluna.
 print(df_vinhos.info())
 
-
 # value_counts() verifica a frequência de linhas idênticas dentro do df_vinhos.
 # Podemos perceber que o df_vinhos tem 6497 linhas. Após aplicar df_vinhos.value_counts(), restaram 5209 linhas únicas. Isso indica que existem 1288 linhas duplicadas.
 print(df_vinhos.value_counts())
 
-# DADOS FALTANTES
+#  -------------- HISTOGRAMA ------------------
+def histograma(df_vinhos):
+    df_vinhos.hist(bins=30, figsize=(15, 10), edgecolor="black")
+    plt.suptitle("Distribuição das variáveis", fontsize=30)
+    plt.rc('font', size=14)
+    plt.rc('axes', labelsize=14, titlesize=14)
+    plt.rc('legend', fontsize=14)
+    plt.rc('xtick', labelsize=10)
+    plt.rc('ytick', labelsize=10)
+    plt.tight_layout()
+    plt.show()
 
-# Certifique-se de que a coluna 'alcohol' esteja numérica
+histograma(df_vinhos)
+
+#  --------------- SCATTER PLOTS ------------
+def scatter(df):
+    df.plot(kind="scatter", x="citric acid", y="pH", grid=True, alpha=0.5)
+    df.plot(kind="scatter", x="residual sugar", y="density", grid=True, alpha=0.5)
+    df.plot(kind="scatter", x="quality", y="free sulfur dioxide", grid=True)
+    df.plot(kind="scatter", x="quality", y="pH")
+    plt.show()
+
+scatter(df_vinhos)
+
+
+
+
+
+
+
+
+
+
+
+# --------------DADOS FALTANTES--------------
+
+# Converte os valores da coluna 'alcohol' para tipo int ou float. Se houver algum valor inválido (como texto), ele será convertido em NaN.
+# Podemos perceber que no print anterior tinhamos a coluna alcohol como type "object", após rodar o comando abaixo o type da coluna retornou como "float"
 df_vinhos['alcohol'] = pd.to_numeric(df_vinhos['alcohol'], errors='coerce')
 
 # Selecionar apenas colunas numéricas
